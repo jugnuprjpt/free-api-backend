@@ -1,10 +1,17 @@
-import booksJson from "../../json/books.json" assert { type: 'json' };
 import { filterObjectKeys, getPaginatedPayload } from "../../utils/helpers.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
+async function loadBooksJson() {
+  const { default: booksJson } = await import('../../json/books.json', {
+    assert: { type: 'json' }
+  });
+  return booksJson;
+}
+
 const getBooks = asyncHandler(async (req, res) => {
+  const booksJson = await loadBooksJson();
   const page = +(req.query.page || 1);
   const limit = +(req.query.limit || 10);
   const query = req.query.query?.toLowerCase(); // search query
@@ -36,6 +43,7 @@ const getBooks = asyncHandler(async (req, res) => {
 });
 
 const getBookById = asyncHandler(async (req, res) => {
+  const booksJson = await loadBooksJson();
   const { bookId } = req.params;
   const book = booksJson.find((book) => +book.id === +bookId);
   if (!book) {
@@ -47,6 +55,7 @@ const getBookById = asyncHandler(async (req, res) => {
 });
 
 const getARandomBook = asyncHandler(async (req, res) => {
+  const booksJson = await loadBooksJson();
   const booksArray = booksJson;
   const randomIndex = Math.floor(Math.random() * booksArray.length);
 
