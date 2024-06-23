@@ -13,8 +13,9 @@ COPY prepare.js ./
 USER node
 
 RUN yarn install --pure-lockfile
-
+COPY . .
 COPY --chown=node:node . .
+# Install app dependencies
 
 EXPOSE 8080
 
