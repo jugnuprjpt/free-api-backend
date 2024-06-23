@@ -1,4 +1,4 @@
-import booksJson from "../../json/books.json";
+import booksJson from "../../json/books.json" assert { type: 'json' };
 import { filterObjectKeys, getPaginatedPayload } from "../../utils/helpers.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
@@ -14,8 +14,8 @@ const getBooks = asyncHandler(async (req, res) => {
     ? structuredClone(booksJson).filter((book) => {
         return (
           book.searchInfo?.textSnippet.toLowerCase().includes(query) ||
-          book.volumeInfo.title?.includes(query) ||
-          book.volumeInfo.subtitle?.includes(query)
+          book.volumeInfo.title?.toLowerCase().includes(query) ||
+          book.volumeInfo.subtitle?.toLowerCase().includes(query)
         );
       })
     : structuredClone(booksJson);
